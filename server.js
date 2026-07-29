@@ -9,6 +9,8 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
+const doctorsRouter = require('./routes/doctors')(pool);
+app.use('/doctors', doctorsRouter);
 app.get('/test-db', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW()');
