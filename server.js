@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
 const app = express();
+const bookingsRouter = require('./routes/bookings')(pool);
+app.use('/bookings', bookingsRouter);
 app.use(cors());
 app.use(express.json());
 const pool = new Pool({
