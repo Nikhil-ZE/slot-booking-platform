@@ -1,4 +1,9 @@
 const nodemailer = require('nodemailer');
+const dns = require('dns');
+
+// Force Node to prefer IPv4 resolution — Render's network can't reach
+// Gmail over IPv6, which causes ENETUNREACH errors otherwise.
+dns.setDefaultResultOrder('ipv4first');
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
