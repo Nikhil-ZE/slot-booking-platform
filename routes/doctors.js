@@ -36,6 +36,33 @@ module.exports = (pool) => {
     }
   });
 
+  // POST a new slot for a doctor
+  router.post('/:id/slots', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { slot_date, start_time, end_time } = req.body;
+
+      if (!slot_date || !start_time || !end_time) {
+        return res.status(400).json({ error: 'Date, start time, and end time are required' });
+      }
+
+      const result = await pool.query(
+        `INSERT INTO slots (doctor_id, slot_date, start_time, end_time, status)
+         VALUES ($1, $2, $3, $4, 'open')
+         RETURNING *`,
+        [id, slot_date, start_time, end_time]
+      );
+
+      res.status(201).json(result.rows[0]);
+    } catch (err) {
+      console.error(err);
+      if (err.code === '23505') {
+        return res.status(409).json({ error: 'This exact slot already exists' });
+      }
+      res.status(500).json({ error: err.message });
+    }
+  });
+
   // GET all bookings for a doctor (their patients)
   router.get('/:id/bookings', async (req, res) => {
     try {
