@@ -1,0 +1,31 @@
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
+  },
+});
+
+async function sendBookingConfirmation({ to, patientName, doctorName, slotDate, startTime, endTime }) {
+  const mailOptions = {
+    from: `"Slot Booking Portal" <${process.env.GMAIL_USER}>`,
+    to,
+    subject: 'Appointment Confirmed',
+    html: `
+      <h2>Your appointment is confirmed!</h2>
+      <p>Hi ${patientName},</p>
+      <p>Your appointment with <strong>${doctorName}</strong> has been booked:</p>
+      <ul>
+        <li><strong>Date:</strong> ${slotDate}</li>
+        <li><strong>Time:</strong> ${startTime} - ${endTime}</li>
+      </ul>
+      <p>Thank you for booking with us.</p>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+}
+
+module.exports = { sendBookingConfirmation };
