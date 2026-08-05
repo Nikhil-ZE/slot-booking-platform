@@ -21,6 +21,9 @@ app.use('/auth', authRouter);
 const bookingsRouter = require('./routes/bookings')(pool);
 app.use('/bookings', bookingsRouter);
 
+const adminRouter = require('./routes/admin')(pool);
+app.use('/admin', adminRouter);
+
 app.get('/test-db', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW()');
