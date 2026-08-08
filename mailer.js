@@ -20,4 +20,19 @@ async function sendBookingConfirmation({ to, patientName, doctorName, slotDate, 
   });
 }
 
-module.exports = { sendBookingConfirmation };
+async function sendOtpEmail({ to, name, otp }) {
+  await resend.emails.send({
+    from: 'Slot Booking Portal <onboarding@resend.dev>',
+    to,
+    subject: 'Verify your account',
+    html: `
+      <h2>Verify your email</h2>
+      <p>Hi ${name},</p>
+      <p>Your verification code is:</p>
+      <p style="font-size: 32px; font-weight: bold; letter-spacing: 4px;">${otp}</p>
+      <p>This code expires in 10 minutes.</p>
+    `,
+  });
+}
+
+module.exports = { sendBookingConfirmation, sendOtpEmail };
